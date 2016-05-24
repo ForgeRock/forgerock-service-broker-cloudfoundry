@@ -2,7 +2,7 @@
 
 This project enables Cloud Foundry administrators to provide application developers with the ability to bind to an existing Forgerock OpenAM installation and participate in Oauth 2 flows.
 
-Specifically, the broker allows the creation of an [ OAuth 2.0 Client Credentials Grant Process] (https://backstage.forgerock.com/#!/docs/openam/13/admin-guide/chap-oauth2#figure-oauth2-client-cred)  
+Specifically, the broker allows the creation of an [OAuth 2.0 Client Credentials Grant Process](https://backstage.forgerock.com/#!/docs/openam/13/admin-guide/chap-oauth2#figure-oauth2-client-cred)  
 
 See installation and use instructions below.
 
@@ -126,7 +126,8 @@ The service(s), plan(s) and access will be listed. Take note of the service name
 **Show the broker in the marketplace**  
 <code>cf marketplace</code>  
 
-<li>**Enable service within the broker:**  
+<li>
+**Enable service within the broker:**  
 enabling the broker will allow access for provision and bind calls (and all other broker API calls)
 
 <code>cf enable-service-access fr-openam</code>  
