@@ -71,93 +71,91 @@ profile icon then select 'view profile' to see all your forks. </li>
    
    You will need to configure **Open Dynamic Client Registration**  
    
-   <ol>
-   <li>Login to the openam console as an administrator</li>
-   <li>Select the "Realm" you wish to configure</li>
-   <li>Select "Services" from the list of options on the left hand side</li>
-   <li>Select "Oauth 2 Provider" from the list of services</li>
-   <li>Enable "Allow Open Dynamic Client Registration:" by selecting the checkbox</li>
-   <li>Enable "Generate Registration Access Tokens:" by selecting the checkbox</li>
-   <li>Click save</li>
-   </ol>
    
-   <H3>Installing the broker</H3>  
+   1. Login to the openam console as an administrator
+   1. Select the "Realm" you wish to configure
+   1. Select "Services" from the list of options on the left hand side
+   1. Select "Oauth 2 Provider" from the list of services
+   1. Enable "Allow Open Dynamic Client Registration:" by selecting the checkbox
+   1. Enable "Generate Registration Access Tokens:" by selecting the checkbox
+   1. Click save
+   
+
+####Installing the broker 
   
    To fully test the broker, you need to have an app to bind to the broker.  There is a companion test app [here] (https://github.com/ForgeRock/forgerock-service-broker-testapp). The test app will be used in the instructions below.  
    
    More information on Managing Service Brokers [here](http://docs.cloudfoundry.org/services/managing-service-brokers.html)
-<ol>
-<li><H5>Push the broker</H5>
-After cloning the repo, edit the config.ini file. Use the URL of the openam you configured above.<pre><code>openam_url: http://your.openam.url.here/
+
+1. **Push the broker**  
+After cloning the repo, edit the config.ini file. Use the URL of the openam you configured above.
+
+   <pre><code>openam_url: http://your.openam.url.here/
 </code></pre>  
 
-Make sure you login to the CF CLI.  Then, from the project directory, push the broker as a CF app.  <pre><code>cf push myfrbroker
-</code></pre>
+   Make sure you login to the CF CLI.  Then, from the project directory, push the broker as a CF app.  
+   <pre><code>cf push myfrbroker</code></pre>
 You can use any unique name in your Cloud Foundry instance.  List the apps to see your running broker.
 <pre><code>cf apps
 </code></pre>
 In the above apps listing, take note of the URL of your broker.  You will need it in the next step.  
 
-</li>
-<li><H5>Create the broker</H5>  
+1. **Create the broker** 
 
   To this point, you just have another cf app.  It is up and running and has implemented the service broker API, but the Cloud Controller does not know it exists as a service broker.  
   
-<pre><code>cf create-service-broker name-of-service-broker username password http://myfrbroker.your.app.url/
-</code></pre></li>  
+ <pre><code>cf create-service-broker name-of-service-broker username password http://myfrbroker.your.app.url/
+</code></pre>  
 
-**name-of-service-broker** - This is the name you want to use for the service broker (not the app).  When you list service brokers, this is the name you will see.  Again, must be unique in your instance of CF.  
-**username** - The Cloud Controller will use this username to authenticate to the broker.  You can change it later if you need to.  
-**password** - The Cloud Controller will use this password to authenticate to the broker.  
-**App URL** - This is the URL of the app you pushed above.  Again you kind find it at anytime by running "cf apps".  
+ **name-of-service-broker** - This is the name you want to use for the service broker (not the app).  When you list service brokers, this is the name you will see.  Again, must be unique in your instance of CF.  
 
-**Note:** At this time, the broker will accept **any** username/password pair. This will be enhanced in the future to authenticate against openam.
+  **username** - The Cloud Controller will use this username to authenticate to the broker.  You can change it later if you need to.  
+  
+ **password** - The Cloud Controller will use this password to authenticate to the broker.  
 
-**list brokers**  
+ **App URL** - This is the URL of the app you pushed above.  Again you kind find it at anytime by running "cf apps".   
+
+ **Note:** At this time, the broker will accept **any** username/password pair. This will be enhanced in the future to authenticate against openam.
+
+ **list brokers**  
 <code>cf service-brokers</code>  
 
-Your service broker should now show up on this list
+ Your service broker should now show up on this list
 
-**Show services in broker and status:**  
+ **Show services in broker and status:**  
 <code>cf service-access</code>   
 
-The service(s), plan(s) and access will be listed. Take note of the service name and plan. At this point, the access column lists _private_ instead of _all_.  A provision or bind request will fail as a result.
+ The service(s), plan(s) and access will be listed. Take note of the service name and plan. At this point, the access column lists _private_ instead of _all_.  A provision or bind request will fail as a result.
 
-**Show the broker in the marketplace**  
-<code>cf marketplace</code>  
+ **Show the broker in the marketplace**  
+ <code>cf marketplace</code>  
 
-<li>
-**Enable service within the broker:**  
+1. **Enable service within the broker:**  
 enabling the broker will allow access for provision and bind calls (and all other broker API calls)
 
-<code>cf enable-service-access fr-openam</code>  
+ <code>cf enable-service-access fr-openam</code>  
 
-another <code>cf service-access</code> will show access enabled for _all_
-</li>
+ another <code>cf service-access</code> will show access enabled for _all_
 
-<li>**Create instance of the service**
+1. **Create instance of the service**
 <code>cf create-service fr-openam oidc yet-another-name</code>
 
-"yet-another-name" is now listed  
-<code>cf services</code>
-</li>
+ "yet-another-name" is now listed  
+ <code>cf services</code>
 
-<li>**Bind to an app (Finally!)**  
+1. **Bind to an app (Finally!)**  
 
-Clone the test app from here: [https://github.com/ForgeRock/forgerock-service-broker-testapp](https://github.com/ForgeRock/forgerock-service-broker-testapp).   
+  Clone the test app from here: [https://github.com/ForgeRock/forgerock-service-broker-testapp](https://github.com/ForgeRock/forgerock-service-broker-testapp).   
 Then from the test app project directory:  
 <code>cf push frtestapp</code>
 
-Bind the test app to the service instance created above
+  Bind the test app to the service instance created above
 <code>cf bind-service frtestapp yet-another-name</code>  
 
-Check the VCAP_SERVICES environment variables to confirm the binding  
+  Check the VCAP_SERVICES environment variables to confirm the binding  
 <code>cf env frtestapp</code>  
 
-You should see username, password and URI variables.
-
-></li>
-</ol>
+ You should see username, password and URI variables.
 
 ####Test the oauth 2 flow
 
