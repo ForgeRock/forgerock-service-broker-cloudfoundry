@@ -46,7 +46,7 @@ to the central repository.</p>
 <p>There are two ways to get the code - if you want to run the code unmodified you can simply clone the central repo (or a 
 reputable mirror):</p>
 
-<pre><code>git clone https://stash.forgerock.org/cloud/forgerock-service-broker-cloudfoundry.git
+<pre><code>git clone https://stash.forgerock.org/scm/cloud/forgerock-service-broker-cloudfoundry.git
 </code></pre>
 
 <p>If, however, you are considering contributing bug fixes, enhancements, or modifying the code you should fork the project
