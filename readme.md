@@ -35,33 +35,31 @@ For a great place to start, take a look at [Getting Started With OpenAM][getting
 
 For further help and discussion, visit the [community forums][community_forum].
 
-<h3>Getting the Code</h3>
+###Getting the Code  
 
-<p>The central project repository lives on the ForgeRock Bitbucket Server at 
-<a href="https://stash.forgerock.org/projects/CLOUD/repos/forgerock-service-broker-cloudfoundry">https://stash.forgerock.org/projects/CLOUD/repos/forgerock-service-broker-cloudfoundry</a>.</p>
+The central project repository lives on the ForgeRock Bitbucket Server at 
+[https://stash.forgerock.org/projects/CLOUD/repos/forgerock-service-broker-cloudfoundry](https://stash.forgerock.org/projects/CLOUD/repos/forgerock-service-broker-cloudfoundry).
 
-<p>Mirrors exist elsewhere (for example GitHub) but all contributions to the project are managed by using pull requests 
-to the central repository.</p>
+Mirrors exist elsewhere (for example GitHub) but all contributions to the project are managed by using pull requests to the central repository.
 
-<p>There are two ways to get the code - if you want to run the code unmodified you can simply clone the central repo (or a 
-reputable mirror):</p>
+There are two ways to get the code - if you want to run the code unmodified you can simply clone the central repo (or a reputable mirror):
 
-<pre><code>git clone https://stash.forgerock.org/cloud/forgerock-service-broker-cloudfoundry.git
-</code></pre>
+`git clone https://stash.forgerock.org/scm/cloud/forgerock-service-broker-cloudfoundry.git`
 
-<p>If, however, you are considering contributing bug fixes, enhancements, or modifying the code you should fork the project
- and then clone your private fork, as described below:</p>
+If, however, you are considering contributing bug fixes, enhancements, or modifying the code you should fork the project
+ and then clone your private fork, as described below:
 
-<ol>
-<li>Create an account on <a href="https://backstage.forgerock.com">BackStage</a> - You can use these credentials to create pull requests, report bugs, and
-download the enterprise release builds.</li>
-<li>Log in to the Bitbucket Server using your BackStage account credentials. </li>
-<li>Fork the <code>forgerock-service-broker-cloudfoundry</code> project. This will create a fork for you in your own area of Bitbucket Server. Click on your 
-profile icon then select 'view profile' to see all your forks. </li>
-<li>Clone your fork to your machine.</li>
-</ol>
 
-<p>Obtaining the code this way will allow you to create pull requests later. </p>
+1. Create an account on [BackStage](https://backstage.forgerock.com) - You can use these credentials to create pull requests, report bugs, and
+download the enterprise release builds.
+1. Log in to the Bitbucket Server using your BackStage account credentials.
+1. Fork the `forgerock-service-broker-cloudfoundry` project. This will create a fork for you in your own area of Bitbucket Server. Click on your 
+profile icon then select 'view profile' to see all your forks.
+1. Clone your fork to your machine.  
+
+
+Obtaining the code this way will allow you to create pull requests later.  
+
 
 ##How to use the broker
 
@@ -90,22 +88,24 @@ profile icon then select 'view profile' to see all your forks. </li>
 1. **Push the broker**  
 After cloning the repo, edit the config.ini file. Use the URL of the openam you configured above.
 
-   <pre><code>openam_url: http://your.openam.url.here/
-</code></pre>  
+   `openam_url: http://your.openam.url.here/`  
 
    Make sure you login to the CF CLI.  Then, from the project directory, push the broker as a CF app.  
-   <pre><code>cf push myfrbroker</code></pre>
-You can use any unique name in your Cloud Foundry instance.  List the apps to see your running broker.
-<pre><code>cf apps
-</code></pre>
-In the above apps listing, take note of the URL of your broker.  You will need it in the next step.  
+    
+   `cf push myfrbroker`  
+    
+ You can use any unique name in your Cloud Foundry instance.  List the apps to see your running broker.  
+  
+ `cf apps`  
+
+  In the above apps listing, take note of the URL of your broker.  You will need it in the next step.  
 
 1. **Create the broker** 
 
   To this point, you just have another cf app.  It is up and running and has implemented the service broker API, but the Cloud Controller does not know it exists as a service broker.  
   
- <pre><code>cf create-service-broker name-of-service-broker username password http://myfrbroker.your.app.url/
-</code></pre>  
+ `cf create-service-broker name-of-service-broker username password http://myfrbroker.your.app.url/
+`  
 
  **name-of-service-broker** - This is the name you want to use for the service broker (not the app).  When you list service brokers, this is the name you will see.  Again, must be unique in your instance of CF.  
 
@@ -118,42 +118,45 @@ In the above apps listing, take note of the URL of your broker.  You will need i
  **Note:** At this time, the broker will accept **any** username/password pair. This will be enhanced in the future to authenticate against openam.
 
  **list brokers**  
-<code>cf service-brokers</code>  
+`cf service-brokers`  
 
  Your service broker should now show up on this list
 
  **Show services in broker and status:**  
-<code>cf service-access</code>   
+`cf service-access`   
 
  The service(s), plan(s) and access will be listed. Take note of the service name and plan. At this point, the access column lists _private_ instead of _all_.  A provision or bind request will fail as a result.
 
  **Show the broker in the marketplace**  
- <code>cf marketplace</code>  
+ `cf marketplace`  
 
 1. **Enable service within the broker:**  
 enabling the broker will allow access for provision and bind calls (and all other broker API calls)
 
- <code>cf enable-service-access fr-openam</code>  
+ `cf enable-service-access fr-openam`  
 
- another <code>cf service-access</code> will show access enabled for _all_
+ another `cf service-access` will show access enabled for _all_
 
 1. **Create instance of the service**
-<code>cf create-service fr-openam oidc yet-another-name</code>
+`cf create-service fr-openam oidc yet-another-name`
 
  "yet-another-name" is now listed  
- <code>cf services</code>
+ 
+ `cf services`
 
 1. **Bind to an app (Finally!)**  
 
   Clone the test app from here: [https://github.com/ForgeRock/forgerock-service-broker-testapp](https://github.com/ForgeRock/forgerock-service-broker-testapp).   
 Then from the test app project directory:  
-<code>cf push frtestapp</code>
+`cf push frtestapp`
 
   Bind the test app to the service instance created above
-<code>cf bind-service frtestapp yet-another-name</code>  
+`cf bind-service frtestapp yet-another-name` 
 
   Check the VCAP_SERVICES environment variables to confirm the binding  
-<code>cf env frtestapp</code>  
+   
+  
+ `cf env frtestapp`  
 
  You should see username, password and URI variables.
 
@@ -171,9 +174,6 @@ Then from the test app project directory:
    `curl -H "Authorization: Bearer access_token_from_above" http://your.testapp.url/oauthinfo`
    
    The test app will use the credentials from VCAP_SERVICES to call openam and validate the token.
-
-
-
 
 
 #### Licensing
